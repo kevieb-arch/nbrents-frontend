@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from '@react-google-maps/api';
+import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import { SEO } from '../components/SEO';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -118,6 +119,9 @@ export default function Properties() {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [mapCenter, setMapCenter] = useState(NB_CENTER);
   const [mapZoom, setMapZoom] = useState(7);
+  const mapRef = useRef(null);
+  const clustererRef = useRef(null);
+  const markersRef = useRef([]);
 
   // Load Google Maps API
   const { isLoaded, loadError } = useJsApiLoader({
@@ -213,6 +217,39 @@ export default function Properties() {
   });
 
   const propertiesWithCoords = filteredProperties.filter(p => p.latitude && p.longitude);
+
+  // Update clusterer when properties change
+  useEffect(() => {
+    if (!mapRef.current || !isLoaded) return;
+    
+    // Clear existing markers
+    markersRef.current.forEach(marker => marker.setMap(null));
+    markersRef.current = [];
+    if (clustererRef.current) {
+      clustererRef.current.clearMarkers();
+    }
+    
+    // Create new markers
+    const markers = propertiesWithCoords.map((property) => {
+      const marker = new window.google.maps.Marker({
+        position: { lat: property.latitude, lng: property.longitude },
+        title: `${property.title} - $${property.price.toLocaleString()}/mo`,
+      });
+      
+      marker.addListener('click', () => {
+        setSelectedMarker(property);
+      });
+      
+      return marker;
+    });
+    
+    markersRef.current = markers;
+    
+    // Update clusterer
+    if (clustererRef.current) {
+      clustererRef.current.addMarkers(markers);
+    }
+  }, [propertiesWithCoords, isLoaded]);
 
   return (
     <div className="min-h-screen pt-20" data-testid="properties-page">
@@ -460,16 +497,60 @@ export default function Properties() {
                 zoom={mapZoom}
                 options={mapOptions}
                 onClick={() => setSelectedMarker(null)}
+                onLoad={(map) => {
+                  mapRef.current = map;
+                  
+                  // Clear existing markers and clusterer
+                  markersRef.current.forEach(marker => marker.setMap(null));
+                  markersRef.current = [];
+                  if (clustererRef.current) {
+                    clustererRef.current.clearMarkers();
+                  }
+                  
+                  // Create markers for properties with coordinates
+                  const markers = propertiesWithCoords.map((property) => {
+                    const marker = new window.google.maps.Marker({
+                      position: { lat: property.latitude, lng: property.longitude },
+                      title: `${property.title} - $${property.price.toLocaleString()}/mo`,
+                    });
+                    
+                    marker.addListener('click', () => {
+                      setSelectedMarker(property);
+                    });
+                    
+                    return marker;
+                  });
+                  
+                  markersRef.current = markers;
+                  
+                  // Create clusterer
+                  clustererRef.current = new MarkerClusterer({
+                    map,
+                    markers,
+                    renderer: {
+                      render: ({ count, position }) => {
+                        return new window.google.maps.Marker({
+                          position,
+                          label: {
+                            text: String(count),
+                            color: 'white',
+                            fontWeight: 'bold',
+                          },
+                          icon: {
+                            path: window.google.maps.SymbolPath.CIRCLE,
+                            scale: 20,
+                            fillColor: '#4f46e5',
+                            fillOpacity: 1,
+                            strokeColor: '#3730a3',
+                            strokeWeight: 2,
+                          },
+                          zIndex: Number(window.google.maps.Marker.MAX_ZINDEX) + count,
+                        });
+                      },
+                    },
+                  });
+                }}
               >
-                {propertiesWithCoords.map((property) => (
-                  <MarkerF
-                    key={property.id}
-                    position={{ lat: property.latitude, lng: property.longitude }}
-                    onClick={() => setSelectedMarker(property)}
-                    title={`${property.title} - $${property.price.toLocaleString()}/mo`}
-                  />
-                ))}
-
                 {selectedMarker && (
                   <InfoWindowF
                     position={{ lat: selectedMarker.latitude, lng: selectedMarker.longitude }}
