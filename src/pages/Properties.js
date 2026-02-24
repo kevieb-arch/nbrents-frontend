@@ -236,6 +236,12 @@ export default function Properties() {
         title: `${property.title} - $${property.price.toLocaleString()}/mo`,
       });
       
+      // Show info on hover
+      marker.addListener('mouseover', () => {
+        setSelectedMarker(property);
+      });
+      
+      // Also support click for mobile users
       marker.addListener('click', () => {
         setSelectedMarker(property);
       });
@@ -514,6 +520,12 @@ export default function Properties() {
                       title: `${property.title} - $${property.price.toLocaleString()}/mo`,
                     });
                     
+                    // Show info on hover
+                    marker.addListener('mouseover', () => {
+                      setSelectedMarker(property);
+                    });
+                    
+                    // Also support click for mobile users
                     marker.addListener('click', () => {
                       setSelectedMarker(property);
                     });
