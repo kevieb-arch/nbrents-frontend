@@ -9,7 +9,9 @@ import {
   Bath, 
   Square, 
   MapPin, 
-  ArrowLeft, 
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
   Phone, 
   Mail,
   CheckCircle,
@@ -96,14 +98,42 @@ export default function PropertyDetail() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Images & Details */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Main Image */}
-            <div className="rounded-3xl overflow-hidden shadow-lg">
+            {/* Main Image with Navigation Arrows */}
+            <div className="relative rounded-3xl overflow-hidden shadow-lg group">
               <img
                 src={images[selectedImage]}
                 alt={property.title}
                 className="w-full h-[400px] lg:h-[500px] object-cover"
                 data-testid="property-main-image"
               />
+              
+              {/* Navigation Arrows */}
+              {images.length > 1 && (
+                <>
+                  {/* Left Arrow */}
+                  <button
+                    onClick={() => setSelectedImage(prev => prev === 0 ? images.length - 1 : prev - 1)}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    data-testid="image-prev-btn"
+                  >
+                    <ChevronLeft className="w-6 h-6 text-gray-800" />
+                  </button>
+                  
+                  {/* Right Arrow */}
+                  <button
+                    onClick={() => setSelectedImage(prev => prev === images.length - 1 ? 0 : prev + 1)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    data-testid="image-next-btn"
+                  >
+                    <ChevronRight className="w-6 h-6 text-gray-800" />
+                  </button>
+                  
+                  {/* Image Counter */}
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    {selectedImage + 1} / {images.length}
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Image Thumbnails */}
