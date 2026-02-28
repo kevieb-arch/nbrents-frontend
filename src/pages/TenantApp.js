@@ -673,10 +673,10 @@ function ProfileTab({ user, onLogin, onLogout }) {
                 <p className="text-sm text-gray-500">Call for emergencies</p>
               </div>
             </a>
-            <a href="mailto:hello@nbrents.com" className="flex items-center p-4 border-t border-gray-100 hover:bg-gray-50">
+            <a href="mailto:hello@NBRents.ca" className="flex items-center p-4 border-t border-gray-100 hover:bg-gray-50">
               <Mail className="w-5 h-5 text-indigo-600 mr-3" />
               <div>
-                <p className="font-medium">hello@nbrents.com</p>
+                <p className="font-medium">hello@NBRents.ca</p>
                 <p className="text-sm text-gray-500">General inquiries</p>
               </div>
             </a>

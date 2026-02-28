@@ -50,8 +50,8 @@ export default function Contact() {
     {
       icon: Mail,
       title: 'Email',
-      value: 'hello@nbrents.com',
-      link: 'mailto:hello@nbrents.com'
+      value: 'hello@NBRents.ca',
+      link: 'mailto:hello@NBRents.ca'
     },
     {
       icon: MapPin,
@@ -71,7 +71,7 @@ export default function Contact() {
     <div className="min-h-screen pt-20" data-testid="contact-page">
       <SEO 
         title="Contact Us - NB Rents Property Management"
-        description="Contact NB Rents for property management services in New Brunswick. Located at 72 Elizabeth St, Miramichi. Call (506) 962-RENT(7368) or email hello@nbrents.com."
+        description="Contact NB Rents for property management services in New Brunswick. Located at 72 Elizabeth St, Miramichi. Call (506) 962-RENT(7368) or email hello@NBRents.ca."
         keywords="contact NB Rents, property management Miramichi, property manager New Brunswick, rental inquiry"
       />
       {/* Hero */}

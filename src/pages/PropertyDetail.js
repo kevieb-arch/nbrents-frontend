@@ -249,7 +249,7 @@ export default function PropertyDetail() {
                     (506) 962-RENT(7368)
                   </Button>
                 </a>
-                <a href="mailto:hello@nbrents.com" className="block">
+                <a href="mailto:hello@NBRents.ca" className="block">
                   <Button variant="ghost" className="w-full flex items-center justify-center gap-2 text-gray-600">
                     <Mail className="w-5 h-5" />
                     Email Us

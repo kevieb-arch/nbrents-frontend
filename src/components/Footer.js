@@ -73,7 +73,7 @@ export const Footer = () => {
                 <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">
                   <Mail className="w-5 h-5 text-indigo-400" />
                 </div>
-                <span className="text-gray-300">hello@nbrents.com</span>
+                <span className="text-gray-300">hello@NBRents.ca</span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
