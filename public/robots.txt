@@ -1,11 +1,11 @@
 # NB Rents - robots.txt
-# https://nbrents.com
+# https://nbrents.ca
 
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://nbrents.com/sitemap.xml
+Sitemap: https://nbrents.ca/sitemap.xml
 
 # Disallow private areas
 Disallow: /owner-portal
