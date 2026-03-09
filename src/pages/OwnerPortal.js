@@ -86,7 +86,8 @@ export default function OwnerPortal() {
     email: '',
     password: '',
     phone: '',
-    user_type: 'tenant'
+    user_type: 'tenant',
+    is_staff: false
   });
 
   const [newProperty, setNewProperty] = useState({
@@ -171,7 +172,7 @@ export default function OwnerPortal() {
       });
       toast.success('User created successfully');
       setShowAddUser(false);
-      setNewUser({ name: '', email: '', password: '', phone: '', user_type: 'tenant' });
+      setNewUser({ name: '', email: '', password: '', phone: '', user_type: 'tenant', is_staff: false });
       fetchUsers();
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Failed to create user');
@@ -188,7 +189,8 @@ export default function OwnerPortal() {
         name: editingUser.name,
         email: editingUser.email,
         phone: editingUser.phone,
-        user_type: editingUser.user_type
+        user_type: editingUser.user_type,
+        is_staff: editingUser.is_staff
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -899,6 +901,7 @@ export default function OwnerPortal() {
                         <th className="text-left py-3 px-4 font-semibold text-gray-700">Email</th>
                         <th className="text-left py-3 px-4 font-semibold text-gray-700">Phone</th>
                         <th className="text-left py-3 px-4 font-semibold text-gray-700">Role</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Staff</th>
                         <th className="text-left py-3 px-4 font-semibold text-gray-700">Created</th>
                         <th className="text-right py-3 px-4 font-semibold text-gray-700">Actions</th>
                       </tr>
@@ -919,6 +922,13 @@ export default function OwnerPortal() {
                             }`}>
                               {u.user_type}
                             </span>
+                          </td>
+                          <td className="py-3 px-4">
+                            {u.is_staff ? (
+                              <span className="badge badge-info">Staff</span>
+                            ) : (
+                              <span className="text-gray-400">-</span>
+                            )}
                           </td>
                           <td className="py-3 px-4 text-gray-500 text-sm">
                             {u.created_at ? new Date(u.created_at).toLocaleDateString() : '-'}
@@ -1235,6 +1245,20 @@ export default function OwnerPortal() {
                 </SelectContent>
               </Select>
             </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="new-user-staff"
+                checked={newUser.is_staff}
+                onCheckedChange={(checked) => setNewUser({ ...newUser, is_staff: checked })}
+                data-testid="new-user-staff"
+              />
+              <Label htmlFor="new-user-staff" className="text-sm font-medium cursor-pointer">
+                NB Rents Staff Member
+              </Label>
+            </div>
+            <p className="text-xs text-gray-500 -mt-2">
+              Staff members can see all properties and access admin features
+            </p>
             <div className="flex gap-3 pt-2">
               <Button type="button" variant="outline" className="flex-1" onClick={() => setShowAddUser(false)}>
                 Cancel
@@ -1302,6 +1326,17 @@ export default function OwnerPortal() {
                     <SelectItem value="admin">Admin</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="edit-user-staff"
+                  checked={editingUser.is_staff || false}
+                  onCheckedChange={(checked) => setEditingUser({ ...editingUser, is_staff: checked })}
+                  data-testid="edit-user-staff"
+                />
+                <Label htmlFor="edit-user-staff" className="text-sm font-medium cursor-pointer">
+                  NB Rents Staff Member
+                </Label>
               </div>
               <div className="flex gap-3 pt-2">
                 <Button type="button" variant="outline" className="flex-1" onClick={() => setShowEditUserDialog(false)}>
