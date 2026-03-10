@@ -37,20 +37,9 @@ import {
   Share,
   Smartphone
 } from 'lucide-react';
+import { usePWA } from '../contexts/PWAContext';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-
-// Platform detection helpers
-function getDevicePlatform() {
-  const ua = navigator.userAgent || '';
-  if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'ios';
-  if (/android/i.test(ua)) return 'android';
-  return 'desktop';
-}
-
-function isAppInstalled() {
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-}
 
 // Bottom Navigation Component
 function BottomNav({ activeTab, setActiveTab, hasNewNotifications }) {
@@ -461,32 +450,20 @@ function RequestsTab({ user, onNewRequest }) {
 
 // Profile Tab Content
 function ProfileTab({ user, onLogin, onLogout }) {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isInstallable, setIsInstallable] = useState(false);
   const [showInstallInstructions, setShowInstallInstructions] = useState(false);
   const [smsOptOut, setSmsOptOut] = useState(user?.sms_opt_out || false);
   const [pushEnabled, setPushEnabled] = useState(false);
   const [pushOptOut, setPushOptOut] = useState(user?.push_opt_out || false);
   const [savingPrefs, setSavingPrefs] = useState(false);
   const [pushSupported, setPushSupported] = useState(false);
-  const [platform] = useState(getDevicePlatform());
-  const [installed] = useState(isAppInstalled());
+  const { canInstall, isInstalled, platform, triggerInstall } = usePWA();
 
   useEffect(() => {
-    const handler = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setIsInstallable(true);
-    };
-    window.addEventListener('beforeinstallprompt', handler);
-    
     // Check if push notifications are supported
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       setPushSupported(true);
       checkPushSubscription();
     }
-    
-    return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
   useEffect(() => {
@@ -507,14 +484,11 @@ function ProfileTab({ user, onLogin, onLogout }) {
   };
 
   const handleInstall = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
+    if (canInstall) {
+      const accepted = await triggerInstall();
+      if (accepted) {
         toast.success('App installed successfully!');
       }
-      setDeferredPrompt(null);
-      setIsInstallable(false);
     } else {
       setShowInstallInstructions(true);
     }
@@ -606,7 +580,7 @@ function ProfileTab({ user, onLogin, onLogout }) {
   return (
     <div className="pb-20 p-4">
       {/* App Install Banner - always show when not installed */}
-      {!installed && (
+      {!isInstalled && (
         <div className="bg-indigo-50 rounded-xl p-4 mb-4 flex items-center justify-between" data-testid="profile-install-banner">
           <div>
             <h3 className="font-semibold text-indigo-900">Install NB Rents App</h3>
@@ -1080,54 +1054,34 @@ export default function TenantApp() {
   const [showLogin, setShowLogin] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
   const [showInstallModal, setShowInstallModal] = useState(false);
-  const [platform, setPlatform] = useState('desktop');
+  const { canInstall, isInstalled, platform, triggerInstall } = usePWA();
 
   // Login Modal
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [loginLoading, setLoginLoading] = useState(false);
 
-  // Listen for install prompt + detect platform
+  // Show install banner when not installed
   useEffect(() => {
-    const detectedPlatform = getDevicePlatform();
-    setPlatform(detectedPlatform);
-    
-    // Don't show banner if already installed
-    if (isAppInstalled()) {
+    if (isInstalled) {
       setShowInstallBanner(false);
       return;
     }
-
-    // Show banner for all platforms (iOS doesn't fire beforeinstallprompt)
     const dismissed = sessionStorage.getItem('nb_install_dismissed');
     if (!dismissed) {
       setShowInstallBanner(true);
     }
-
-    const handler = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      if (!dismissed) setShowInstallBanner(true);
-    };
-    window.addEventListener('beforeinstallprompt', handler);
-
-    return () => window.removeEventListener('beforeinstallprompt', handler);
-  }, []);
+  }, [isInstalled]);
 
   const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      // Android/Chrome - use native prompt
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
+    if (canInstall) {
+      const accepted = await triggerInstall();
+      if (accepted) {
         toast.success('App installed successfully!');
+        setShowInstallBanner(false);
       }
-      setDeferredPrompt(null);
-      setShowInstallBanner(false);
     } else {
-      // iOS or no prompt available - show instructions modal
       setShowInstallModal(true);
     }
   };
