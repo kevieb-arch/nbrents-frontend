@@ -103,9 +103,17 @@ export default function PropertyDetail() {
               <img
                 src={images[selectedImage]}
                 alt={property.title}
-                className="w-full h-[400px] lg:h-[500px] object-cover"
+                className={`w-full h-[400px] lg:h-[500px] object-cover ${property.status === 'rented' ? 'opacity-70' : ''}`}
                 data-testid="property-main-image"
               />
+              {/* Diagonal RENTED banner */}
+              {property.status === 'rented' && (
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-20">
+                  <div className="absolute -left-16 top-12 bg-red-600 text-white text-xl font-bold py-2 px-20 -rotate-45 shadow-lg tracking-widest">
+                    RENTED
+                  </div>
+                </div>
+              )}
               
               {/* Navigation Arrows */}
               {images.length > 1 && (
