@@ -926,7 +926,7 @@ export default function OwnerPortal() {
                           </td>
                           <td className="py-3 px-4">
                             {u.is_staff ? (
-                              <span className="badge badge-info">Staff</span>
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Staff</span>
                             ) : (
                               <span className="text-gray-400">-</span>
                             )}
