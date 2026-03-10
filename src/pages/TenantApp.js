@@ -33,10 +33,24 @@ import {
   Loader2,
   Download,
   Phone,
-  Mail
+  Mail,
+  Share,
+  Smartphone
 } from 'lucide-react';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
+// Platform detection helpers
+function getDevicePlatform() {
+  const ua = navigator.userAgent || '';
+  if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'ios';
+  if (/android/i.test(ua)) return 'android';
+  return 'desktop';
+}
+
+function isAppInstalled() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
 
 // Bottom Navigation Component
 function BottomNav({ activeTab, setActiveTab, hasNewNotifications }) {
@@ -449,11 +463,14 @@ function RequestsTab({ user, onNewRequest }) {
 function ProfileTab({ user, onLogin, onLogout }) {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstallable, setIsInstallable] = useState(false);
+  const [showInstallInstructions, setShowInstallInstructions] = useState(false);
   const [smsOptOut, setSmsOptOut] = useState(user?.sms_opt_out || false);
   const [pushEnabled, setPushEnabled] = useState(false);
   const [pushOptOut, setPushOptOut] = useState(user?.push_opt_out || false);
   const [savingPrefs, setSavingPrefs] = useState(false);
   const [pushSupported, setPushSupported] = useState(false);
+  const [platform] = useState(getDevicePlatform());
+  const [installed] = useState(isAppInstalled());
 
   useEffect(() => {
     const handler = (e) => {
@@ -490,14 +507,17 @@ function ProfileTab({ user, onLogin, onLogout }) {
   };
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      toast.success('App installed successfully!');
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        toast.success('App installed successfully!');
+      }
+      setDeferredPrompt(null);
+      setIsInstallable(false);
+    } else {
+      setShowInstallInstructions(true);
     }
-    setDeferredPrompt(null);
-    setIsInstallable(false);
   };
 
   const handleSmsOptOutChange = async (checked) => {
@@ -585,19 +605,69 @@ function ProfileTab({ user, onLogin, onLogout }) {
 
   return (
     <div className="pb-20 p-4">
-      {/* App Install Banner */}
-      {isInstallable && (
-        <div className="bg-indigo-50 rounded-xl p-4 mb-4 flex items-center justify-between">
+      {/* App Install Banner - always show when not installed */}
+      {!installed && (
+        <div className="bg-indigo-50 rounded-xl p-4 mb-4 flex items-center justify-between" data-testid="profile-install-banner">
           <div>
-            <h3 className="font-semibold text-indigo-900">Install App</h3>
-            <p className="text-sm text-indigo-700">Add to your home screen for quick access</p>
+            <h3 className="font-semibold text-indigo-900">Install NB Rents App</h3>
+            <p className="text-sm text-indigo-700">
+              {platform === 'ios' ? 'Add to your home screen for quick access' : 'Install for quick access to maintenance requests'}
+            </p>
           </div>
-          <Button size="sm" onClick={handleInstall}>
+          <Button size="sm" onClick={handleInstall} data-testid="profile-install-btn">
             <Download className="w-4 h-4 mr-1" />
             Install
           </Button>
         </div>
       )}
+
+      {/* Install Instructions Dialog */}
+      <Dialog open={showInstallInstructions} onOpenChange={setShowInstallInstructions}>
+        <DialogContent className="max-w-sm mx-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Download className="w-5 h-5 text-indigo-600" />
+              How to Install
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            {platform === 'ios' ? (
+              <>
+                <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                  <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">1</span>
+                  <p className="text-sm">Tap the <strong>Share</strong> button at the bottom of Safari</p>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                  <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">2</span>
+                  <p className="text-sm">Scroll down and tap <strong>"Add to Home Screen"</strong></p>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                  <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">3</span>
+                  <p className="text-sm">Tap <strong>"Add"</strong> to confirm</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                  <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">1</span>
+                  <p className="text-sm">Tap the <strong>menu</strong> (&#8942;) at the top right of Chrome</p>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                  <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">2</span>
+                  <p className="text-sm">Tap <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong></p>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                  <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">3</span>
+                  <p className="text-sm">Tap <strong>"Install"</strong> to confirm</p>
+                </div>
+              </>
+            )}
+            <Button className="w-full" variant="outline" onClick={() => setShowInstallInstructions(false)}>
+              Got it
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {user ? (
         <>
@@ -1012,37 +1082,59 @@ export default function TenantApp() {
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
+  const [showInstallModal, setShowInstallModal] = useState(false);
+  const [platform, setPlatform] = useState('desktop');
 
   // Login Modal
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [loginLoading, setLoginLoading] = useState(false);
 
-  // Listen for install prompt
+  // Listen for install prompt + detect platform
   useEffect(() => {
+    const detectedPlatform = getDevicePlatform();
+    setPlatform(detectedPlatform);
+    
+    // Don't show banner if already installed
+    if (isAppInstalled()) {
+      setShowInstallBanner(false);
+      return;
+    }
+
+    // Show banner for all platforms (iOS doesn't fire beforeinstallprompt)
+    const dismissed = sessionStorage.getItem('nb_install_dismissed');
+    if (!dismissed) {
+      setShowInstallBanner(true);
+    }
+
     const handler = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      setShowInstallBanner(true);
+      if (!dismissed) setShowInstallBanner(true);
     };
     window.addEventListener('beforeinstallprompt', handler);
-    
-    // Check if app is already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setShowInstallBanner(false);
-    }
-    
+
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      toast.success('App installed successfully!');
+    if (deferredPrompt) {
+      // Android/Chrome - use native prompt
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        toast.success('App installed successfully!');
+      }
+      setDeferredPrompt(null);
+      setShowInstallBanner(false);
+    } else {
+      // iOS or no prompt available - show instructions modal
+      setShowInstallModal(true);
     }
-    setDeferredPrompt(null);
+  };
+
+  const dismissInstallBanner = () => {
     setShowInstallBanner(false);
+    sessionStorage.setItem('nb_install_dismissed', 'true');
   };
 
   const handleLogin = async (e) => {
@@ -1136,19 +1228,117 @@ export default function TenantApp() {
               variant="secondary"
               onClick={handleInstallClick}
               className="bg-white text-indigo-600 hover:bg-indigo-50"
+              data-testid="install-app-btn"
             >
               <Download className="w-4 h-4 mr-1" />
               Install
             </Button>
             <button 
-              onClick={() => setShowInstallBanner(false)}
+              onClick={dismissInstallBanner}
               className="p-1 hover:bg-indigo-500 rounded"
+              data-testid="dismiss-install-btn"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
         </div>
       )}
+
+      {/* Install Instructions Modal */}
+      <Dialog open={showInstallModal} onOpenChange={setShowInstallModal}>
+        <DialogContent className="max-w-sm mx-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Smartphone className="w-5 h-5 text-indigo-600" />
+              Install NB Rents App
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {platform === 'ios' ? (
+              <>
+                <p className="text-sm text-gray-600">Follow these steps to add the app to your home screen:</p>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
+                    <div>
+                      <p className="text-sm font-medium">Tap the Share button</p>
+                      <p className="text-xs text-gray-500">The square icon with an arrow at the bottom of Safari</p>
+                      <div className="mt-1 flex items-center gap-1 text-indigo-600">
+                        <Share className="w-4 h-4" />
+                        <span className="text-xs font-medium">Share</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
+                    <div>
+                      <p className="text-sm font-medium">Scroll down and tap "Add to Home Screen"</p>
+                      <p className="text-xs text-gray-500">You may need to scroll down in the share menu</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
+                    <div>
+                      <p className="text-sm font-medium">Tap "Add" to confirm</p>
+                      <p className="text-xs text-gray-500">The app will appear on your home screen</p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : platform === 'android' ? (
+              <>
+                <p className="text-sm text-gray-600">Follow these steps to install the app:</p>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
+                    <div>
+                      <p className="text-sm font-medium">Tap the menu button</p>
+                      <p className="text-xs text-gray-500">The three dots (&#8942;) at the top right of Chrome</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
+                    <div>
+                      <p className="text-sm font-medium">Tap "Add to Home Screen" or "Install App"</p>
+                      <p className="text-xs text-gray-500">This option may say "Install" on newer versions</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
+                    <div>
+                      <p className="text-sm font-medium">Tap "Install" to confirm</p>
+                      <p className="text-xs text-gray-500">The app will be added to your home screen</p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-gray-600">Install this app on your device:</p>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
+                    <div>
+                      <p className="text-sm font-medium">Look for the install icon in the address bar</p>
+                      <p className="text-xs text-gray-500">Click the install icon (&#8853;) or the download icon in Chrome's address bar</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
+                    <div>
+                      <p className="text-sm font-medium">Click "Install" to confirm</p>
+                      <p className="text-xs text-gray-500">The app will open in its own window</p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+            <Button className="w-full" variant="outline" onClick={() => setShowInstallModal(false)}>
+              Got it
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* New Request Modal */}
       <NewRequestModal 
