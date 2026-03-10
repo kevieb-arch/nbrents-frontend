@@ -59,13 +59,21 @@ function PropertyListCard({ property, isHovered, onHover, onLeave }) {
       onMouseLeave={onLeave}
       data-testid={`property-card-${property.id}`}
     >
-      <div className="flex">
+      <div className="flex relative">
+        {/* Diagonal RENTED banner */}
+        {property.status === 'rented' && (
+          <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
+            <div className="absolute -left-6 top-3 bg-red-600 text-white text-[10px] font-bold py-0.5 px-8 -rotate-45 shadow-md tracking-wider">
+              RENTED
+            </div>
+          </div>
+        )}
         {/* Image */}
         <div className="w-32 h-32 flex-shrink-0">
           <img 
             src={property.images?.[0] || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400'}
             alt={property.title}
-            className="w-full h-full object-cover"
+            className={`w-full h-full object-cover ${property.status === 'rented' ? 'opacity-60' : ''}`}
           />
         </div>
         
@@ -74,7 +82,8 @@ function PropertyListCard({ property, isHovered, onHover, onLeave }) {
           <div className="flex items-start justify-between mb-1">
             <h3 className="font-semibold text-gray-900 text-sm line-clamp-1">{property.title}</h3>
             <span className={`text-xs px-2 py-0.5 rounded-full ${
-              property.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
+              property.status === 'available' ? 'bg-green-100 text-green-700' : 
+              property.status === 'rented' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'
             }`}>
               {property.status}
             </span>
