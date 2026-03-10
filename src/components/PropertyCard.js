@@ -22,9 +22,17 @@ export const PropertyCard = ({ property }) => {
         <img
           src={property.images?.[0] || defaultImage}
           alt={property.title}
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover ${property.status === 'rented' ? 'opacity-60' : ''}`}
         />
-        <div className="absolute top-4 left-4">
+        {/* Diagonal RENTED banner */}
+        {property.status === 'rented' && (
+          <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-20">
+            <div className="absolute -left-10 top-6 bg-red-600 text-white text-sm font-bold py-1.5 px-12 -rotate-45 shadow-lg tracking-widest">
+              RENTED
+            </div>
+          </div>
+        )}
+        <div className="absolute top-4 left-4 z-10">
           <span className={`badge ${statusColors[property.status] || 'badge-available'}`}>
             {property.status?.charAt(0).toUpperCase() + property.status?.slice(1)}
           </span>
