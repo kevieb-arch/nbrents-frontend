@@ -3,6 +3,7 @@ import '@/App.css';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
+import { PWAProvider } from './contexts/PWAContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { AuthModal } from './components/AuthModal';
@@ -53,6 +54,7 @@ function App() {
 
   return (
     <HelmetProvider>
+      <PWAProvider>
       <AuthProvider>
         <BrowserRouter>
           <AppLayout onOpenAuth={openAuth}>
@@ -81,6 +83,7 @@ function App() {
           <Toaster position="top-right" richColors />
         </BrowserRouter>
       </AuthProvider>
+      </PWAProvider>
     </HelmetProvider>
   );
 }
