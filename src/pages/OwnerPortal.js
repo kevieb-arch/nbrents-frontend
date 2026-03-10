@@ -731,13 +731,21 @@ export default function OwnerPortal() {
                   {properties.map((property) => (
                     <div 
                       key={property.id}
-                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors relative overflow-hidden"
                       data-testid={`owner-property-${property.id}`}
                     >
+                      {/* Diagonal RENTED banner */}
+                      {property.status === 'rented' && (
+                        <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
+                          <div className="absolute -left-8 top-4 bg-red-600 text-white text-xs font-bold py-1 px-10 -rotate-45 shadow-md tracking-wider">
+                            RENTED
+                          </div>
+                        </div>
+                      )}
                       <img
                         src={property.images?.[0] || 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=200'}
                         alt={property.title}
-                        className="w-16 h-16 rounded-lg object-cover"
+                        className={`w-16 h-16 rounded-lg object-cover ${property.status === 'rented' ? 'opacity-60' : ''}`}
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
@@ -748,11 +756,32 @@ export default function OwnerPortal() {
                         </div>
                         <p className="text-sm text-gray-500">{property.address}, {property.city}</p>
                       </div>
-                      <div className="text-right mr-2">
+                      <div className="text-right mr-2 flex flex-col items-end gap-1">
                         <div className="font-bold text-indigo-600">${property.price}/mo</div>
                         <span className={`badge ${property.status === 'rented' ? 'badge-rented' : property.status === 'maintenance' ? 'badge-maintenance' : 'badge-available'}`}>
                           {property.status}
                         </span>
+                        {property.status !== 'rented' ? (
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="text-xs h-7 px-2 border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700"
+                            onClick={(e) => { e.preventDefault(); updateStatus(property.id, 'rented'); }}
+                            data-testid={`mark-rented-${property.id}`}
+                          >
+                            Mark Rented
+                          </Button>
+                        ) : (
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="text-xs h-7 px-2 border-green-300 text-green-600 hover:bg-green-50 hover:text-green-700"
+                            onClick={(e) => { e.preventDefault(); updateStatus(property.id, 'available'); }}
+                            data-testid={`mark-available-${property.id}`}
+                          >
+                            Mark Available
+                          </Button>
+                        )}
                       </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
