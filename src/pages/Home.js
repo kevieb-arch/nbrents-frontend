@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { PropertyCard } from '../components/PropertyCard';
 import { SEO } from '../components/SEO';
 import { Button } from '../components/ui/button';
-import { ArrowRight, Wrench, Home as HomeIcon, TrendingUp, Shield, Clock, Star, ChevronRight, Smartphone, CheckCircle2, Bell, Search, User } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { ArrowRight, Wrench, Home as HomeIcon, TrendingUp, Shield, Clock, Star, ChevronRight, Smartphone, CheckCircle2, Bell, Search, User, Share, Download } from 'lucide-react';
+import { usePWA } from '../contexts/PWAContext';
+import { toast } from 'sonner';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -12,6 +15,9 @@ export default function Home() {
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showInstallGuide, setShowInstallGuide] = useState(false);
+  const { canInstall, isInstalled, platform, triggerInstall } = usePWA();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -309,16 +315,93 @@ export default function Home() {
                 ))}
               </div>
 
-              <Link to="/tenant-app">
-                <Button className="bg-white text-indigo-700 hover:bg-indigo-50 rounded-full px-8 py-4 font-semibold shadow-lg hover:shadow-xl transition-all" data-testid="get-tenant-app">
-                  Get the App
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
+              <Button 
+                className="bg-white text-indigo-700 hover:bg-indigo-50 rounded-full px-8 py-4 font-semibold shadow-lg hover:shadow-xl transition-all" 
+                data-testid="get-tenant-app"
+                onClick={async () => {
+                  if (isInstalled) {
+                    navigate('/tenant-app');
+                  } else if (canInstall) {
+                    const accepted = await triggerInstall();
+                    if (accepted) toast.success('App installed! Check your home screen.');
+                  } else {
+                    setShowInstallGuide(true);
+                  }
+                }}
+              >
+                {isInstalled ? 'Open App' : 'Get the App'}
+                <Download className="w-5 h-5 ml-2" />
+              </Button>
               
               <p className="text-sm text-indigo-200 mt-4">
                 Works on iPhone, Android & Desktop. No app store needed!
               </p>
+
+              {/* Install Guide Modal */}
+              <Dialog open={showInstallGuide} onOpenChange={setShowInstallGuide}>
+                <DialogContent className="max-w-sm mx-auto">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <Smartphone className="w-5 h-5 text-indigo-600" />
+                      Install NB Rents App
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    {platform === 'ios' ? (
+                      <>
+                        <p className="text-sm text-gray-600">Follow these steps to add the app to your home screen:</p>
+                        <div className="space-y-3">
+                          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
+                            <div>
+                              <p className="text-sm font-medium">Tap the Share button</p>
+                              <p className="text-xs text-gray-500">The square icon with an arrow at the bottom of Safari</p>
+                              <div className="mt-1 flex items-center gap-1 text-indigo-600">
+                                <Share className="w-4 h-4" />
+                                <span className="text-xs font-medium">Share</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
+                            <p className="text-sm">Scroll down and tap <strong>"Add to Home Screen"</strong></p>
+                          </div>
+                          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
+                            <p className="text-sm">Tap <strong>"Add"</strong> to confirm</p>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm text-gray-600">Follow these steps to install the app:</p>
+                        <div className="space-y-3">
+                          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
+                            <p className="text-sm">Tap the <strong>menu</strong> (&#8942;) at the top right of Chrome</p>
+                          </div>
+                          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
+                            <p className="text-sm">Tap <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong></p>
+                          </div>
+                          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
+                            <p className="text-sm">Tap <strong>"Install"</strong> to confirm</p>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <div className="flex gap-2">
+                      <Button className="flex-1" variant="outline" onClick={() => setShowInstallGuide(false)}>
+                        Got it
+                      </Button>
+                      <Button className="flex-1" onClick={() => { setShowInstallGuide(false); navigate('/tenant-app'); }}>
+                        Open App
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
             {/* Phone Mockup */}
