@@ -1252,6 +1252,7 @@ export default function OwnerPortal() {
                 checked={newUser.is_staff}
                 onCheckedChange={(checked) => setNewUser({ ...newUser, is_staff: checked })}
                 data-testid="new-user-staff"
+                className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
               />
               <Label htmlFor="new-user-staff" className="text-sm font-medium cursor-pointer">
                 NB Rents Staff Member
@@ -1334,6 +1335,7 @@ export default function OwnerPortal() {
                   checked={editingUser.is_staff || false}
                   onCheckedChange={(checked) => setEditingUser({ ...editingUser, is_staff: checked })}
                   data-testid="edit-user-staff"
+                  className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                 />
                 <Label htmlFor="edit-user-staff" className="text-sm font-medium cursor-pointer">
                   NB Rents Staff Member
