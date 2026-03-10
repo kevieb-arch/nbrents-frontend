@@ -395,7 +395,7 @@ export default function Home() {
                       <Button className="flex-1" variant="outline" onClick={() => setShowInstallGuide(false)}>
                         Got it
                       </Button>
-                      <Button className="flex-1" onClick={() => { setShowInstallGuide(false); navigate('/tenant-app'); }}>
+                      <Button className="flex-1 bg-indigo-600 text-white hover:bg-indigo-700" onClick={() => { setShowInstallGuide(false); navigate('/tenant-app'); }}>
                         Open App
                       </Button>
                     </div>
