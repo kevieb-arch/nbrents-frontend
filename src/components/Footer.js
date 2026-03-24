@@ -63,26 +63,32 @@ export const Footer = () => {
           <div>
             <h4 className="font-bold text-lg mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>Contact Us</h4>
             <ul className="space-y-4">
-              <li className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">
-                  <Phone className="w-5 h-5 text-indigo-400" />
-                </div>
-                <span className="text-gray-300">(506) 962-RENT(7368)</span>
+              <li>
+                <a href="tel:5069627368" className="flex items-center gap-3 hover:text-indigo-400 transition-colors cursor-pointer" onClick={(e) => { e.preventDefault(); window.location.href = 'tel:5069627368'; }}>
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center pointer-events-none">
+                    <Phone className="w-5 h-5 text-indigo-400 pointer-events-none" />
+                  </div>
+                  <span className="text-gray-300 pointer-events-none">(506) 962-RENT(7368)</span>
+                </a>
               </li>
-              <li className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-indigo-400" />
-                </div>
-                <span className="text-gray-300">hello@NBRents.ca</span>
+              <li>
+                <a href="mailto:hello@NBRents.ca" className="flex items-center gap-3 hover:text-indigo-400 transition-colors cursor-pointer" onClick={(e) => { e.preventDefault(); window.location.href = 'mailto:hello@NBRents.ca'; }}>
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center pointer-events-none">
+                    <Mail className="w-5 h-5 text-indigo-400 pointer-events-none" />
+                  </div>
+                  <span className="text-gray-300 pointer-events-none">hello@NBRents.ca</span>
+                </a>
               </li>
-              <li className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5 text-indigo-400" />
-                </div>
-                <div className="text-gray-300">
-                  <p>72 Elizabeth St. Unit 85</p>
-                  <p>Miramichi, NB E1V 1W1</p>
-                </div>
+              <li>
+                <a href="https://maps.google.com/?q=72+Elizabeth+St+Unit+85+Miramichi+NB+E1V+1W1" target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 hover:text-indigo-400 transition-colors cursor-pointer">
+                  <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0 pointer-events-none">
+                    <MapPin className="w-5 h-5 text-indigo-400 pointer-events-none" />
+                  </div>
+                  <div className="text-gray-300 pointer-events-none">
+                    <p>72 Elizabeth St. Unit 85</p>
+                    <p>Miramichi, NB E1V 1W1</p>
+                  </div>
+                </a>
               </li>
             </ul>
           </div>
