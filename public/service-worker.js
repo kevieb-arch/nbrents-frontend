@@ -1,9 +1,6 @@
-const CACHE_NAME = 'nb-rents-v1';
+const CACHE_NAME = 'nb-rents-v3';
 const urlsToCache = [
-  '/',
-  '/tenant-app',
-  '/static/js/bundle.js',
-  '/static/css/main.css'
+  '/tenant-app'
 ];
 
 // Install event - cache resources
