@@ -100,24 +100,37 @@ export default function Contact() {
               </h2>
               
               {contactInfo.map((item, index) => (
-                <div 
-                  key={index}
-                  className="flex items-start gap-4 p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition-shadow"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0">
-                    <item.icon className="w-6 h-6 text-indigo-600" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-500 mb-1">{item.title}</div>
-                    {item.link ? (
-                      <a href={item.link} className="font-medium text-gray-900 hover:text-indigo-600 transition-colors">
-                        {item.value}
-                      </a>
-                    ) : (
+                item.link ? (
+                  <a
+                    key={index}
+                    href={item.link}
+                    target={item.link.startsWith('http') ? '_blank' : undefined}
+                    rel={item.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    className="flex items-start gap-4 p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer"
+                    data-testid={`contact-${item.title.toLowerCase()}`}
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0">
+                      <item.icon className="w-6 h-6 text-indigo-600" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">{item.title}</div>
                       <span className="font-medium text-gray-900">{item.value}</span>
-                    )}
+                    </div>
+                  </a>
+                ) : (
+                  <div 
+                    key={index}
+                    className="flex items-start gap-4 p-4 bg-white rounded-xl border border-gray-100"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0">
+                      <item.icon className="w-6 h-6 text-indigo-600" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">{item.title}</div>
+                      <span className="font-medium text-gray-900">{item.value}</span>
+                    </div>
                   </div>
-                </div>
+                )
               ))}
 
               {/* Map Placeholder */}
