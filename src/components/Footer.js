@@ -64,7 +64,7 @@ export const Footer = () => {
             <h4 className="font-bold text-lg mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>Contact Us</h4>
             <ul className="space-y-4">
               <li>
-                <a href="tel:5069627368" className="flex items-center gap-3 hover:text-indigo-400 transition-colors cursor-pointer" onClick={(e) => { e.preventDefault(); window.location.href = 'tel:5069627368'; }}>
+                <a href="tel:5069627368" className="flex items-center gap-3 hover:text-indigo-400 transition-colors cursor-pointer">
                   <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center pointer-events-none">
                     <Phone className="w-5 h-5 text-indigo-400 pointer-events-none" />
                   </div>
@@ -72,7 +72,7 @@ export const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="mailto:hello@NBRents.ca" className="flex items-center gap-3 hover:text-indigo-400 transition-colors cursor-pointer" onClick={(e) => { e.preventDefault(); window.location.href = 'mailto:hello@NBRents.ca'; }}>
+                <a href="mailto:hello@NBRents.ca" className="flex items-center gap-3 hover:text-indigo-400 transition-colors cursor-pointer">
                   <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center pointer-events-none">
                     <Mail className="w-5 h-5 text-indigo-400 pointer-events-none" />
                   </div>
