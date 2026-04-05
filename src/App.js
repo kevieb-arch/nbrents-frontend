@@ -24,6 +24,7 @@ import OwnerPortal from './pages/OwnerPortal';
 import TenantPortal from './pages/TenantPortal';
 import ServicePortal from './pages/ServicePortal';
 import TenantApp from './pages/TenantApp';
+import Quiz from './pages/Quiz';
 
 // Layout wrapper to conditionally show navbar/footer
 function AppLayout({ children, onOpenAuth }) {
@@ -73,6 +74,7 @@ function App() {
               <Route path="/tenant-portal" element={<TenantPortal />} />
               <Route path="/service-portal" element={<ServicePortal />} />
               <Route path="/tenant-app" element={<TenantApp />} />
+              <Route path="/quiz" element={<Quiz />} />
             </Routes>
           </AppLayout>
           <AuthModal 
