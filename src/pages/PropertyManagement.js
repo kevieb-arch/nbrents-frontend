@@ -51,15 +51,15 @@ export default function PropertyManagement() {
           <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600 rounded-full filter blur-3xl -translate-y-1/2 translate-x-1/3" />
           <div className="absolute bottom-0 left-0 w-72 h-72 bg-teal-500 rounded-full filter blur-3xl translate-y-1/3 -translate-x-1/4" />
         </div>
-        <div className="container-main relative z-10 py-20 sm:py-28 lg:py-36">
-          <div className="max-w-3xl">
+        <div className="container-main relative z-10 pt-28 pb-20 sm:pb-28 lg:pb-36" style={{ paddingTop: 'max(7rem, calc(80px + 3rem))' }}>
+          <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>
               Hands-Off Property Management in Northern New Brunswick
             </h1>
             <p className="text-xl sm:text-2xl text-indigo-300 font-medium mb-4">
               You buy the property. We handle everything else.
             </p>
-            <p className="text-lg text-gray-300 mb-8 max-w-2xl leading-relaxed">
+            <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
               We take care of tenants, rent collection, maintenance, and full unit turns — so your rental runs smoothly without taking over your life.
             </p>
             <p className="text-gray-400 mb-6 text-sm uppercase tracking-wider font-medium">Own a rental property? Let's talk.</p>
@@ -77,7 +77,7 @@ export default function PropertyManagement() {
       <section className="py-20 bg-gray-50">
         <div className="container-main">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 text-center" style={{ fontFamily: 'Outfit, sans-serif' }}>
               This is for property owners who:
             </h2>
             <div className="space-y-4">
@@ -107,7 +107,7 @@ export default function PropertyManagement() {
       <section className="py-20 bg-white">
         <div className="container-main">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 text-center" style={{ fontFamily: 'Outfit, sans-serif' }}>
               We take over the day-to-day so you don't have to
             </h2>
             <div className="grid sm:grid-cols-2 gap-4 mt-8">
@@ -138,10 +138,10 @@ export default function PropertyManagement() {
       <section className="py-20 bg-gray-900 text-white">
         <div className="container-main">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-center" style={{ fontFamily: 'Outfit, sans-serif' }}>
               Most property managers outsource everything. We don't.
             </h2>
-            <p className="text-lg text-gray-300 mb-8">
+            <p className="text-lg text-gray-300 mb-8 text-center">
               At NBRents, we have <strong className="text-white">in-house teams</strong> for:
             </p>
             <div className="grid sm:grid-cols-3 gap-4 mb-10">
@@ -183,10 +183,10 @@ export default function PropertyManagement() {
       <section className="py-20 bg-white">
         <div className="container-main">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 text-center" style={{ fontFamily: 'Outfit, sans-serif' }}>
               Just bought or renovated a property?
             </h2>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 mb-8 text-center">
               This is where most owners get stuck. <strong>We step in after acquisition or renovation</strong> and:
             </p>
             <div className="space-y-4">
