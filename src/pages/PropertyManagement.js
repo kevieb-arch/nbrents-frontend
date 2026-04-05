@@ -220,8 +220,8 @@ export default function PropertyManagement() {
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8" style={{ fontFamily: 'Outfit, sans-serif' }}>
               We proudly serve
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-              {["Miramichi", "Bathurst", "Rogersville", "Northern NB"].map((city, i) => (
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-8">
+              {["Miramichi", "Moncton", "Bathurst", "Rogersville", "Northern NB"].map((city, i) => (
                 <div key={i} className="p-5 bg-white rounded-2xl border border-gray-100 shadow-sm">
                   <MapPin className="w-6 h-6 text-indigo-600 mx-auto mb-2" />
                   <p className="font-semibold text-gray-900">{city}</p>
