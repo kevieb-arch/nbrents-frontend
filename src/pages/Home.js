@@ -491,6 +491,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Quiz CTA Section */}
+      <section className="py-20 bg-indigo-600 relative overflow-hidden" data-testid="quiz-section">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 right-10 w-64 h-64 bg-white rounded-full filter blur-3xl" />
+          <div className="absolute bottom-10 left-10 w-48 h-48 bg-indigo-300 rounded-full filter blur-3xl" />
+        </div>
+        <div className="container-main relative z-10 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            Should You Hire a Property Manager?
+          </h2>
+          <p className="text-lg text-indigo-100 mb-8 max-w-2xl mx-auto">
+            Not sure if professional property management is right for you? Take our free 2-minute quiz and get personalized results.
+          </p>
+          <Link to="/quiz">
+            <Button className="bg-white text-indigo-700 hover:bg-indigo-50 rounded-full px-8 py-4 font-semibold shadow-lg hover:shadow-xl transition-all text-lg" data-testid="take-quiz-btn">
+              Take the Quiz Now
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 bg-gray-900 relative overflow-hidden" data-testid="cta-section">
         <div className="absolute inset-0 opacity-10">
