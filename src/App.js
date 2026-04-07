@@ -26,19 +26,22 @@ import ServicePortal from './pages/ServicePortal';
 import TenantApp from './pages/TenantApp';
 import Quiz from './pages/Quiz';
 import PropertyManagement from './pages/PropertyManagement';
+import RiverCity from './pages/RiverCity';
 
 // Layout wrapper to conditionally show navbar/footer
 function AppLayout({ children, onOpenAuth }) {
   const location = useLocation();
   const isTenantApp = location.pathname === '/tenant-app';
+  const isRiverCity = location.pathname === '/rivercity';
+  const hideChrome = isTenantApp || isRiverCity;
 
   return (
     <div className="min-h-screen flex flex-col">
-      {!isTenantApp && <Navbar onOpenAuth={onOpenAuth} />}
+      {!hideChrome && <Navbar onOpenAuth={onOpenAuth} />}
       <main className="flex-1">
         {children}
       </main>
-      {!isTenantApp && <Footer />}
+      {!hideChrome && <Footer />}
     </div>
   );
 }
@@ -77,6 +80,7 @@ function App() {
               <Route path="/tenant-app" element={<TenantApp />} />
               <Route path="/quiz" element={<Quiz />} />
               <Route path="/property-management" element={<PropertyManagement />} />
+              <Route path="/rivercity" element={<RiverCity />} />
             </Routes>
           </AppLayout>
           <AuthModal 
