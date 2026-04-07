@@ -27,12 +27,13 @@ import TenantApp from './pages/TenantApp';
 import Quiz from './pages/Quiz';
 import PropertyManagement from './pages/PropertyManagement';
 import RiverCity from './pages/RiverCity';
+import RiverCityCleaners from './pages/RiverCityCleaners';
 
 // Layout wrapper to conditionally show navbar/footer
 function AppLayout({ children, onOpenAuth }) {
   const location = useLocation();
   const isTenantApp = location.pathname === '/tenant-app';
-  const isRiverCity = location.pathname === '/rivercity';
+  const isRiverCity = location.pathname === '/rivercity' || location.pathname === '/rivercity-cleaners';
   const hideChrome = isTenantApp || isRiverCity;
 
   return (
@@ -81,6 +82,7 @@ function App() {
               <Route path="/quiz" element={<Quiz />} />
               <Route path="/property-management" element={<PropertyManagement />} />
               <Route path="/rivercity" element={<RiverCity />} />
+              <Route path="/rivercity-cleaners" element={<RiverCityCleaners />} />
             </Routes>
           </AppLayout>
           <AuthModal 
