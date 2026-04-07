@@ -55,7 +55,7 @@ export default function RiverCity() {
         </div>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 pt-12 pb-20 sm:pb-28">
           <div className="flex justify-center mb-10">
-            <img src="/rivercity-logo.png" alt="NB River City Construction Ltd." className="h-32 sm:h-44 w-auto" data-testid="rivercity-logo" />
+            <img src="/rivercity-logo.png" alt="NB River City Construction Ltd." className="h-52 sm:h-64 w-auto rounded-2xl shadow-lg shadow-blue-500/20 ring-1 ring-white/10" data-testid="rivercity-logo" />
           </div>
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>
