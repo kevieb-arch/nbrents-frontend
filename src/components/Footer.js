@@ -8,13 +8,8 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-400 flex items-center justify-center">
-                <span className="text-white font-bold text-lg">NB</span>
-              </div>
-              <span className="text-xl font-bold" style={{ fontFamily: 'Outfit, sans-serif' }}>
-                NB Rents
-              </span>
+            <div className="mb-6">
+              <img src="/nbrents-logo-full.png" alt="NB Rents" className="h-20 w-auto rounded-lg" />
             </div>
             <p className="text-gray-400 mb-6">
               Full-service property management maximizing returns for owners and creating happy homes for tenants.
