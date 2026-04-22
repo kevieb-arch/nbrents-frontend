@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nb-rents-v3';
+const CACHE_NAME = 'nb-rents-v4';
 const urlsToCache = [
   '/tenant-app'
 ];
